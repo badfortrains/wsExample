@@ -12,26 +12,58 @@ var {
   View,
 } = React;
 
-var io = require("./socket.io-client");
-//Must specifiy 'jsonp: false' since react native doesn't provide the dom
-//and thus wouldn't support creating an iframe/script tag
-var socket = io('http://wupnp.com/controller',{jsonp: false});
-  socket.on('connect', function(){ console.log("connect") });
-  socket.on('event', function(data){ console.log(event) });
-  socket.on('disconnect', function(){});
-
 var firebase = require("./firebase-debug")
-// Get a reference to our posts
-var ref = new Firebase("https://docs-examples.firebaseio.com/web/saving-data/fireblog/posts");
+var io = require("./socket.io-client");
 
-// Attach an asynchronous callback to read the data at our posts reference
-ref.on("value", function(snapshot) {
-  console.log(snapshot.val());
-}, function (errorObject) {
-  console.log("The read failed: " + errorObject.code);
-});
+var SocketIOExample = React.createClass({
+  getInitialState:function(){
+    return {messages: []}
+  },
+  componentDidMount: function(){
+  //Must specifiy 'jsonp: false' since react native doesn't provide the dom
+  //and thus wouldn't support creating an iframe/script tag
+    this.socket = io('http://localhost:5000',{jsonp: false});
+    this.socket.on('chat message', (msg) =>{
+      this.state.messages.push(msg);
+      this.forceUpdate();
+    });
+  },
+  render: function(){
+    return (
+      <View>
+        {
+          this.state.messages.map(m => {
+            return <Text>{m}</Text>
+          })
+        }
+      </View>
+    )
+  }
+})
 
 
+var FirebaseExample = React.createClass({
+  getInitialState: function(){
+    return {}
+  },
+  componentDidMount: function(){
+    var ref = new Firebase("https://docs-examples.firebaseio.com/web/saving-data/fireblog/posts");
+    ref.on("value",function(snapshot){
+      this.setState(snapshot.val())
+    }.bind(this))
+  },
+  render: function(){
+    return (
+      <View>
+        {
+          Object.keys(this.state).map(k=>{
+            return <Text>{this.state[k].title} - {this.state[k].author}</Text>
+          })
+        }
+      </View>
+    )
+  }
+})
 
 var wsExample = React.createClass({
   render: function() {
@@ -40,13 +72,8 @@ var wsExample = React.createClass({
         <Text style={styles.welcome}>
           Welcome to React Native!
         </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+Control+Z for dev menu
-        </Text>
+        <FirebaseExample /> 
+        <SocketIOExample />
       </View>
     );
   }
