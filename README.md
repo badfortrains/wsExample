@@ -34,11 +34,9 @@ to open chat window, sent messages will be appended as text views in the react-n
 
 Note: 
 +  JSONP polling will cause a crash since dom is not supported, need to pass ````{jsonp: false}```` on connect. 
-+  Socket.io expects window.navigator to be a string, 
-  added 
++  Socket.io expects window.navigator.userAgent to be a string, need to set
 ````
-window.navigator = {
-  userAgent: "react-native"
-  }
+window.navigator.userAgent = "react-native"; //or any other string value
 ````
-to head of socket.io-client to make it work.
+before including socket.io-client.
++  The react-native package manager does not build the socket.io-client library correctly (not sure why, may be based on us wanting the browser version and react-native ignoring the "browser" field in engine.io's package file).  Luckily the socket.io-client includes a prebuilt verison of the library that we can include, albiet with a hacky relative include path ````var io = require("./node_modules/socket.io/node_modules/socket.io-client/socket.io");````
