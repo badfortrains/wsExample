@@ -12,8 +12,12 @@ var {
   View,
 } = React;
 
+
+//socket.io assumes navigator.userAgent is a string, supply a dummy one to make it happy
+window.navigator.userAgent = "react-native";
+
 var firebase = require("./firebase-debug")
-var io = require("./socket.io-client");
+var io = require("./node_modules/socket.io/node_modules/socket.io-client/socket.io");
 
 var SocketIOExample = React.createClass({
   getInitialState:function(){
