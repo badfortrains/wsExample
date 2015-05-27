@@ -4,9 +4,9 @@ Demo of Websockets in react native
 Basic test of react-native websocket polyfill
 https://github.com/badfortrains/react-native/tree/WebSocket
 
-This is a very early demo, and the polyfill contains bug.  Specifically, it leaks memory and does not handle errors correctly.  Currently binary data is not supported.
+This is a very early demo, and the polyfill probably contains bug.
 
-Includes slightlty modified versions of Firebase-client and Socket.io-client.
+Includes slightlty modified version of Firebase-client and a demo of Socket.io-client.
 
 
 ##Firebase
